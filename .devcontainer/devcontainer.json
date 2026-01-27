@@ -1,19 +1,32 @@
 {
-  "name": "CSPC 250 Hash Lab",
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  
-  "onCreateCommand": {
-    "install-tools": "sudo apt-get update -qq && sudo apt-get install -y john whois",
-    "setup-dirs": "mkdir -p screenshots data",
-    "create-shadow": "echo 'root:*:19219:0:99999:7:::' > data/shadow && echo 'daemon:*:19219:0:99999:7:::' >> data/shadow && echo 'karl:$y$j9T$oR2ZofMTuH3dpEGbw6c/y.$TwfvHgCl4sIp0b28YTepJ3YVvl/3UyWKeLCmDV1tAd9:19255:0:99999:7:::' >> data/shadow"
-  },
-
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "files.autoSave": "afterDelay"
-      }
-    }
-  }
+  "image": "mcr.microsoft.com/devcontainers/universal:2"
 }
+```
+
+**Step 7:** Scroll down, type commit message: `Use minimal config`
+
+**Step 8:** Click **"Commit changes"** (green button)
+
+✅ **Done with GitHub!**
+
+---
+
+### **PART 2: Rebuild Your Codespace**
+
+**Step 9:** Go back to your Codespace tab (the one showing the error)
+
+**Step 10:** Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac)
+
+**Step 11:** Type: `rebuild`
+
+**Step 12:** Click: **"Codespaces: Rebuild Container"**
+
+**Step 13:** Click **"Rebuild"** when it asks to confirm
+
+**Step 14:** WAIT 1-2 minutes while it rebuilds
+
+You'll see messages like "Starting codespace..." - this is normal!
+
+**Step 15:** Wait until you see the terminal prompt at the bottom:
+```
+@yourusername ➜ /workspaces/hash-lab... $
