@@ -2,28 +2,14 @@
   "name": "CSPC 250 Hash Lab",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": false,
-      "installOhMyZsh": false,
-      "upgradePackages": true
-    }
-  },
-
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postCreateCommand": "sudo apt-get update -qq && sudo apt-get install -y john whois && mkdir -p screenshots data && cat > data/shadow << 'EOF'\nroot:*:19219:0:99999:7:::\ndaemon:*:19219:0:99999:7:::\nkarl:$y$j9T$oR2ZofMTuH3dpEGbw6c/y.$TwfvHgCl4sIp0b28YTepJ3YVvl/3UyWKeLCmDV1tAd9:19255:0:99999:7:::\nEOF",
 
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-vscode.hexeditor"
-      ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
-        "files.autoSave": "afterDelay",
-        "files.eol": "\n"
+        "files.autoSave": "afterDelay"
       }
     }
-  },
-
-  "remoteUser": "codespace"
+  }
 }
