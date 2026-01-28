@@ -1,137 +1,142 @@
-# Lab Submission
-## Hash It Out - Week 2
+# Hash It Out Lab - Submission
 
-**Student Name**: _[Your name here]_  
-**Date Completed**: _[Today's date]_
-
----
-
-## 📸 Screenshot Checklist
-
-I have saved the following screenshots in the `screenshots/` folder:
-
-- [ ] `screenshot1-name-hash.png` - MD5 hash of my name
-- [ ] `screenshot2-cracked.png` - John the Ripper cracking results
-- [ ] `screenshot3-algorithms.png` - Four different hash algorithms comparison
+**Student Name:** [Your Name Here]  
+**Date:** [Submission Date]  
+**CSPC 250: Computer Systems Security**
 
 ---
 
-## 📝 Written Questions
+## Part 1: Understanding Hashes (10 points)
 
-### Question 1: Avalanche Effect (4 points)
+### Exercise 1.1: Create Your First Hash
 
-**When I changed one character in my name file (added "!"), what happened to the hash?**
+**1. What is the MD5 hash of your name?**
 
-**My answer**:
-[Write your answer here - explain what you observed and what this demonstrates about hash functions. Should be 3-4 sentences.]
+[Your answer here]
 
-**Key concept**: This demonstrates the avalanche effect.
+**2. Run the command again with the exact same name. Did the hash change? Why or why not?**
 
----
+[Your answer here]
 
-### Question 2: Shadow File Format (4 points)
+**3. Change one letter of your name (like capitalizing it) and run again. How different is the hash?**
 
-**Looking at the user "karl" in data/shadow, answer these:**
-
-**A) What hashing algorithm is used?**
-[Your answer - hint: look at the format $y$...]
-
-**B) What is the salt value?**
-[Your answer - which part of the hash is the salt?]
-
-**C) Why is the salt stored with the hash instead of being kept secret?**
-[Your answer - explain the purpose of salts vs. keys]
+[Your answer here]
 
 ---
 
-### Question 3: Cracking Speed (4 points)
+### Exercise 1.2: Hash Collisions
 
-**A) How long did it take John the Ripper to crack karl's password?**
-[Your answer - approximate time]
+**4. What is the md5sum of the file you created?**
 
-**B) Why was it so fast?**
-[Your answer - explain dictionary attacks and why weak passwords are vulnerable]
+[Your answer here]
 
-**C) What does this tell you about password strength?**
-[Your answer - what makes a password resistant to dictionary attacks?]
+**5. In your own words, explain what a hash collision is and why it's a security concern.**
 
----
-
-### Question 4: Hash Algorithm Comparison (3 points)
-
-**A) Which algorithm produced the longest hash output?**
-[Your answer]
-
-**B) Why might longer hashes be more secure?**
-[Your answer - think about collision resistance]
-
-**C) Why is MD5 no longer recommended for security use?**
-[Your answer - what vulnerabilities have been found in MD5?]
+[Your answer here]
 
 ---
 
-## 🤔 Lab Reflection (10 points)
+## Part 2: Password Storage (10 points)
 
-**Write 150-200 words reflecting on this lab. Address these prompts:**
+### Exercise 2.1: Examine the Shadow File
 
-- What surprised you most about password cracking?
-- How has this lab changed how you think about passwords?
-- What real-world applications of hashing did you think about?
-- What was the most challenging part of this lab?
-- How will you apply what you learned?
+**6. Why would a system have users with `*` instead of password hashes?**
 
-**Your reflection**:
+[Your answer here]
 
-[Write your 150-200 word reflection here. Be thoughtful and specific. Connect concepts to real-world security.]
+**7. What do the different parts of karl's password line mean? (Hint: Research the format of `/etc/shadow` entries)**
 
-
-
-
-
-*(word count: ___)*
+[Your answer here]
 
 ---
 
-## ✅ Pre-Submission Checklist
+### Exercise 2.2: Understanding Password Hashing
 
-**Before you commit and push, verify:**
+**8. Why don't systems store passwords in plaintext?**
 
-- [ ] All 3 screenshots are saved in `screenshots/` folder
-- [ ] All screenshots clearly show MY work (my name)
-- [ ] All 4 questions are answered completely (not one-sentence answers)
-- [ ] Reflection is 150-200 words
-- [ ] Name and date are filled in at top
-- [ ] I've reviewed my work for spelling/grammar
-- [ ] I understand I'm submitting this under academic integrity policy
+[Your answer here]
 
-**To submit, run these commands in the terminal:**
-```bash
-git add .
-git commit -m "Completed Hash It Out Lab"
-git push
-```
+**9. What is a "salt" in password hashing and why is it used?**
+
+[Your answer here]
+
+**10. Research the `yescrypt` algorithm (the `$y$` prefix). Why is it considered secure?**
+
+[Your answer here]
 
 ---
 
-## 🎓 Self-Assessment (Optional but Recommended)
+## Part 3: Password Cracking (15 points)
 
-**Rate your understanding (1-5 scale, where 5 = fully understand):**
+### Exercise 3.1: Crack Karl's Password
 
-- Hash functions: __/5
-- Password storage: __/5
-- Password cracking techniques: __/5
-- Salts and their purpose: __/5
-- Ethical considerations: __/5
+**11. What was karl's password?**
 
-**What topics would you like to review more?**
+[Your answer here]
 
-[Your answer]
+**12. How long did it take John to crack it?**
 
-**What was your biggest "aha!" moment in this lab?**
+[Your answer here]
 
-[Your answer]
+**13. Why was this password easy to crack?**
+
+[Your answer here]
 
 ---
 
-**Submission Date**: _[Date you pushed to GitHub]_  
-**Repository URL**: _[Your repo URL]_
+### Exercise 3.2: Verify the Password
+
+**14. Does the hash match? (Yes/No)**
+
+[Your answer here]
+
+**15. What does this tell you about how Linux verifies passwords during login?**
+
+[Your answer here]
+
+---
+
+## Part 4: Security Analysis (5 points)
+
+**16. Based on this lab, what makes a password "strong"?**
+
+[Your answer here]
+
+**17. Why do websites now require passwords with numbers, symbols, and mixed case?**
+
+[Your answer here]
+
+**18. If you were designing a password policy for a company, what rules would you set? (At least 3 specific rules)**
+
+[Your answer here]
+
+---
+
+## Screenshots Checklist
+
+Include three screenshots in the `screenshots/` folder:
+
+- [ ] `screenshot1.png` - Your name being hashed (Exercise 1.1)
+- [ ] `screenshot2.png` - md5sum of your file (Exercise 1.2)
+- [ ] `screenshot3.png` - John the Ripper cracking karl's password (Exercise 3.1)
+
+---
+
+## Reflection (Optional but Recommended)
+
+What was the most interesting thing you learned in this lab?
+
+[Your answer here]
+
+---
+
+## Academic Integrity Statement
+
+By submitting this lab, I affirm that:
+- I completed this work independently
+- I did not copy answers from other students
+- I did not use AI tools to generate my responses
+- I understand the concepts and can explain them in my own words
+
+**Signature (type your name):** [Your Name]  
+**Date:** [Date]
