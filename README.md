@@ -286,7 +286,7 @@ git push
 
 **Solution:** You didn't run Command 1 from setup. Run:
 ```bash
-sudo apt-get update -qq && sudo apt-get install -y john whois
+sudo apt-get install john
 ```
 
 ### "No such file or directory: data/shadow"
@@ -355,9 +355,7 @@ You may NOT:
 ## 📧 Questions?
 
 - **During Class:** Ask Professor Maine
-- **Office Hours:** [Posted on Canvas]
-- **Email:** [Your Email]
-- **Canvas Discussion:** Post in Week 2 Lab forum
+- **Email:** mainem@evangel.edu
 
 ---
 
