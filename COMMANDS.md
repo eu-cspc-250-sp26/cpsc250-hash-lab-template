@@ -1,100 +1,59 @@
 # Quick Command Reference
-## CSPC 250 Hash Lab
 
-Use these commands while working through the lab.
-
----
-
-## Hash Commands
+## Setup Commands (Run Once)
 ```bash
-# MD5 hash
-md5sum filename.txt
+# Install tools
+sudo apt-get update -qq && sudo apt-get install -y john whois
 
-# SHA-1 hash
-sha1sum filename.txt
+# Create directories
+mkdir -p screenshots data
 
-# SHA-256 hash
-sha256sum filename.txt
-
-# SHA-512 hash
-sha512sum filename.txt
-
-# Hash a string directly (pipe it)
-echo "text to hash" | md5sum
+# Create test data
+cat > data/shadow << 'EOF'
+root:*:19219:0:99999:7:::
+daemon:*:19219:0:99999:7:::
+karl:$y$j9T$oR2ZofMTuH3dpEGbw6c/y.$TwfvHgCl4sIp0b28YTepJ3YVvl/3UyWKeLCmDV1tAd9:19255:0:99999:7:::
+EOF
 ```
 
----
-
-## John the Ripper Commands
+## Lab Commands
 ```bash
-# Crack passwords using dictionary
+# Hash your name
+echo "YourName" | md5sum
+
+# Create file and hash it
+echo "YourName" > /tmp/name.txt
+md5sum /tmp/name.txt
+
+# View shadow file
+cat data/shadow
+
+# Crack passwords
 john --format=crypt --wordlist=/usr/share/john/password.lst data/shadow
 
 # Show cracked passwords
 john --show data/shadow
 
-# Get help
-john --help
+# Verify password
+mkpasswd -m yescrypt -S oR2ZofMTuH3dpEGbw6c/y. 'password-here'
 ```
 
----
-
-## File Commands
+## Submission Commands
 ```bash
-# Create a file with content
-echo "content here" > filename.txt
-
-# View file contents
-cat filename.txt
-
-# List files
-ls
-ls -la  # detailed listing including hidden files
-
-# Check if file exists
-test -f filename.txt && echo "exists" || echo "not found"
-```
-
----
-
-## Git Commands (For Submission)
-```bash
-# Check status (what's changed?)
-git status
-
-# Add all changes
+# Commit your work
 git add .
-
-# Commit with message
-git commit -m "Completed Hash It Out Lab"
-
-# Push to GitHub
+git commit -m "Completed Hash It Out lab"
 git push
-
-# View commit history
-git log --oneline
 ```
 
----
-
-## Taking Screenshots
-
-**On Windows**: Press `Windows + Shift + S` (Snipping Tool)
-**On Mac**: Press `Cmd + Shift + 4` (Screenshot tool)
-**In Codespace**: Take screenshot of your terminal/browser
-
-Save as: `screenshot1-name-hash.png`, etc. in the `screenshots/` folder
-
----
-
-## Need Help?
+## Verification Commands
 ```bash
-# Run the verification script
-./setup.sh
-
-# Check if John is installed
+# Check if john is installed
 which john
 
-# Check version
-john --version
+# Check if directories exist
+ls -la
+
+# Check if shadow file exists
+cat data/shadow
 ```
