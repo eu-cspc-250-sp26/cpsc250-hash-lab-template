@@ -1,130 +1,234 @@
-# Hash It Out Lab
-## CSPC 250: Computer Systems Security - Week 2
+# Hash It Out Lab - Computer Security
 
-**Student Name**: _[Your name here]_  
-**Date**: _[Date]_  
-**Due**: Sunday, Week 2, 11:59 PM
+**CSPC 250: Computer Systems Security**  
+**Week 2 Lab - Cryptography & Password Cracking**
 
 ---
 
-## 🎯 Lab Objectives
+## 🎯 Lab Overview
 
-By completing this lab, you will:
-- Understand cryptographic hashing (MD5, SHA family)
-- Learn how Linux stores password hashes
-- Use John the Ripper to crack weak passwords
-- Understand the importance of password salts
-- Practice using security tools responsibly
+In this lab, you will:
+- Learn what cryptographic hashes are and why they matter
+- Explore how passwords are stored securely (and insecurely)
+- Use real password-cracking tools
+- Understand why strong passwords are essential
+
+**Time Required:** 90 minutes  
+**Points:** 40 points  
+**Tools:** John the Ripper, Linux commands, browser-based environment
 
 ---
 
 ## 🚀 Getting Started
 
-### Launch Your Codespace
+### Step 1: Open Your Codespace
 
-1. Click the green **"<> Code"** button above
-2. Click the **"Codespaces"** tab
-3. Click **"Create codespace on main"**
-4. Wait 30-60 seconds for environment to build
+You should already have accepted the GitHub Classroom assignment and have your personal repository created.
 
-**✅ Your environment will have John the Ripper pre-installed!**
+1. Navigate to your repository on GitHub
+2. Click the green **Code** button
+3. Click the **Codespaces** tab
+4. Click **Create codespace on main**
+5. Wait 1-2 minutes for the environment to build
 
-### Verify Setup
-
-Once your Codespace loads, open the terminal (bottom panel) and run:
-```bash
-./setup.sh
-```
-
-This verifies all tools are installed correctly.
+**You'll see:** VS Code interface in your browser with a terminal at the bottom.
 
 ---
 
-## 📝 Lab Activities
+### Step 2: Run Setup Commands
 
-### Part 1: Understanding Hashes
+Your Codespace needs three commands to set up the lab environment. Copy and paste each command into the **terminal** at the bottom of VS Code, then press Enter.
 
-#### Activity 1.1: Create Your Name File
+#### Command 1: Install Password Cracking Tools (30-60 seconds)
+
 ```bash
-# Replace "Your Name" with YOUR actual name
-echo "Your Name" > name.txt
-
-# Generate MD5 hash
-md5sum name.txt
+sudo apt-get update -qq && sudo apt-get install -y john whois
 ```
 
-**📸 Screenshot 1 Required**: Save this output showing YOUR name's hash.
+**What this does:** Installs John the Ripper (password cracker) and whois utility.
 
-#### Activity 1.2: Observe Avalanche Effect
-```bash
-# Create slightly different file
-echo "Your Name!" > name2.txt
-
-# Compare hashes - notice how different they are!
-md5sum name.txt name2.txt
-```
-
-**💡 Question 1**: How different are these hashes? What does this tell you about hash functions?
+⏱️ **Wait for the command to finish** - you'll see the prompt (`$`) return when done.
 
 ---
 
-### Part 2: Linux Password Hashing
+#### Command 2: Create Working Directories (instant)
 
-#### Activity 2.1: Examine Shadow File
 ```bash
-# Look at the test shadow file
+mkdir -p screenshots data
+```
+
+**What this does:** Creates folders for your screenshots and lab data files.
+
+---
+
+#### Command 3: Create Test Password File (instant)
+
+```bash
+cat > data/shadow << 'EOF'
+root:*:19219:0:99999:7:::
+daemon:*:19219:0:99999:7:::
+karl:$y$j9T$oR2ZofMTuH3dpEGbw6c/y.$TwfvHgCl4sIp0b28YTepJ3YVvl/3UyWKeLCmDV1tAd9:19255:0:99999:7:::
+EOF
+```
+
+**What this does:** Creates a simulated password file with encrypted passwords for you to crack.
+
+---
+
+### Step 3: Verify Setup
+
+Run these verification commands to make sure everything is ready:
+
+```bash
+which john
+```
+**Should show:** `/usr/sbin/john`
+
+```bash
+ls -la data/
+```
+**Should show:** A `shadow` file in the data directory
+
+```bash
+cat data/shadow
+```
+**Should show:** 3 lines of password data (root, daemon, karl)
+
+---
+
+## ✅ You're Ready!
+
+If all verification commands worked, you're ready to start the lab exercises below.
+
+---
+
+## 📝 Lab Exercises
+
+### Part 1: Understanding Hashes (10 points)
+
+#### Exercise 1.1: Create Your First Hash
+
+Run this command with YOUR actual first name (replace `YourName`):
+
+```bash
+echo "YourName" | md5sum
+```
+
+**Questions to answer in SUBMISSION.md:**
+1. What is the MD5 hash of your name?
+2. Run the command again with the exact same name. Did the hash change? Why or why not?
+3. Change one letter of your name (like capitalizing it) and run again. How different is the hash?
+
+**Screenshot Required:** Terminal showing your name being hashed (5 points)
+
+---
+
+#### Exercise 1.2: Hash Collisions
+
+Create a file with your name:
+
+```bash
+echo "YourName" > /tmp/name.txt
+```
+
+Get its MD5 hash:
+
+```bash
+md5sum /tmp/name.txt
+```
+
+**Questions to answer in SUBMISSION.md:**
+4. What is the md5sum of the file you created?
+5. In your own words, explain what a hash collision is and why it's a security concern.
+
+**Screenshot Required:** Terminal showing the md5sum command and result (5 points)
+
+---
+
+### Part 2: Password Storage (10 points)
+
+#### Exercise 2.1: Examine the Shadow File
+
+Look at the simulated password file:
+
+```bash
 cat data/shadow
 ```
 
-You'll see user entries including one named "karl".
+You'll see three users: root, daemon, and karl.
 
-**💡 Question 2**: Find the user "karl". Identify:
-- What hashing algorithm is used? (hint: look at the `$y$`)
-- What is the salt value?
-- Why is the salt stored with the hash?
+**Notice:**
+- root and daemon have `*` instead of a password hash (no password set)
+- karl has a long encrypted string starting with `$y$j9T$...`
+
+**Questions to answer in SUBMISSION.md:**
+6. Why would a system have users with `*` instead of password hashes?
+7. What do the different parts of karl's password line mean? (Hint: Research the format of `/etc/shadow` entries)
 
 ---
 
-### Part 3: Password Cracking
+#### Exercise 2.2: Understanding Password Hashing
 
-#### Activity 3.1: Crack the Password
+**Questions to answer in SUBMISSION.md:**
+8. Why don't systems store passwords in plaintext?
+9. What is a "salt" in password hashing and why is it used?
+10. Research the `yescrypt` algorithm (the `$y$` prefix). Why is it considered secure?
+
+---
+
+### Part 3: Password Cracking (15 points)
+
+#### Exercise 3.1: Crack Karl's Password
+
+John the Ripper will try common passwords from its built-in wordlist:
+
 ```bash
-# Use John the Ripper to crack karl's password
 john --format=crypt --wordlist=/usr/share/john/password.lst data/shadow
 ```
 
-Watch as John tries passwords from the wordlist. This should complete in seconds!
+**This will take 10-30 seconds.** Watch as John tries different passwords!
 
-**📸 Screenshot 2 Required**: Capture the output showing the cracked password.
+When it finishes, you'll see the cracked password displayed.
 
-#### Activity 3.2: View Results
+**To see cracked passwords again later:**
+
 ```bash
-# Show cracked passwords
 john --show data/shadow
 ```
 
-**💡 Question 3**: 
-- How long did this take? 
-- Why was it so fast?
-- What does this tell you about dictionary attacks?
+**Questions to answer in SUBMISSION.md:**
+11. What was karl's password?
+12. How long did it take John to crack it?
+13. Why was this password easy to crack?
+
+**Screenshot Required:** Terminal showing John the Ripper successfully cracking the password (5 points)
 
 ---
 
-### Part 4: Compare Hash Algorithms
+#### Exercise 3.2: Verify the Password
+
+Now that you know karl's password, let's verify it's correct using the `mkpasswd` command:
+
 ```bash
-# Try different hash algorithms on your name
-echo "Your Name" | md5sum
-echo "Your Name" | sha1sum
-echo "Your Name" | sha256sum
-echo "Your Name" | sha512sum
+mkpasswd -m yescrypt -S oR2ZofMTuH3dpEGbw6c/y. '<karls-password-here>'
 ```
 
-**📸 Screenshot 3 Required**: Capture all four hash outputs.
+**Replace `<karls-password-here>` with the actual password you discovered.**
 
-**💡 Question 4**: 
-- Which algorithm produces the longest hash? 
-- Why might longer hashes be more secure?
-- Why is MD5 no longer recommended for password hashing?
+The output should match the hash in the shadow file!
+
+**Questions to answer in SUBMISSION.md:**
+14. Does the hash match? (Yes/No)
+15. What does this tell you about how Linux verifies passwords during login?
+
+---
+
+### Part 4: Security Analysis (5 points)
+
+**Questions to answer in SUBMISSION.md:**
+16. Based on this lab, what makes a password "strong"?
+17. Why do websites now require passwords with numbers, symbols, and mixed case?
+18. If you were designing a password policy for a company, what rules would you set? (At least 3 specific rules)
 
 ---
 
@@ -132,119 +236,129 @@ echo "Your Name" | sha512sum
 
 ### What to Submit
 
-1. **Three Screenshots** (save in `screenshots/` folder):
-   - `screenshot1-name-hash.png` - Your name's MD5 hash
-   - `screenshot2-cracked.png` - John the Ripper results  
-   - `screenshot3-algorithms.png` - Four different hash algorithms
+1. **SUBMISSION.md file** with answers to all 18 questions (25 points)
+2. **Three screenshots** saved in the `screenshots/` folder (15 points):
+   - Screenshot 1: Your name being hashed (Exercise 1.1)
+   - Screenshot 2: md5sum of your file (Exercise 1.2)
+   - Screenshot 3: John the Ripper cracking karl's password (Exercise 3.1)
 
-2. **Written Responses** (edit `SUBMISSION.md` file):
-   - Answer all 4 questions thoroughly
-   - Complete the reflection section (150-200 words)
+### How to Submit
 
-3. **Commit and Push Your Work**:
+#### Save Your Screenshots
+
+In VS Code:
+1. Take screenshots of your terminal
+2. Click **File → Open File**
+3. Navigate to `screenshots/` folder
+4. Upload your 3 screenshots there
+5. Name them: `screenshot1.png`, `screenshot2.png`, `screenshot3.png`
+
+#### Edit SUBMISSION.md
+
+1. In VS Code, open `SUBMISSION.md` from the file explorer
+2. Fill in your answers to all 18 questions
+3. Save the file (`Ctrl+S` or `Cmd+S`)
+
+#### Commit and Push Your Work
+
+In the terminal, run these commands:
+
 ```bash
-   git add .
-   git commit -m "Completed Hash It Out Lab"
-   git push
+git add .
+git commit -m "Completed Hash It Out lab"
+git push
 ```
 
-### Grading Rubric (40 points)
+#### Verify Submission
 
-- **Screenshots** (15 points): 5 points each
-  - Must show YOUR unique work
-  - Must be clear and readable
-  - Must show the complete command and output
+1. Go to your repository on GitHub
+2. Click on `SUBMISSION.md` - your answers should be there
+3. Click on `screenshots/` folder - your 3 screenshots should be there
 
-- **Written Questions** (15 points): 
-  - Complete, thoughtful answers
-  - Demonstrates understanding
-  - Uses proper terminology
-
-- **Reflection** (10 points): 
-  - 150-200 words
-  - Thoughtful analysis
-  - Addresses all prompts
-
-**Due Date**: Sunday, 11:59 PM (end of Week 2)
+**Due Date:** As posted on Canvas  
+**Late Penalty:** As stated in syllabus
 
 ---
 
-## 🐛 Troubleshooting
+## 🆘 Troubleshooting
 
-### Codespace Won't Start?
-- Wait a full 60 seconds (sometimes slow to build)
-- Refresh your browser
-- Try Chrome (works best with Codespaces)
+### "john: command not found"
 
-### Tools Not Working?
-Run the setup script again:
+**Solution:** You didn't run Command 1 from setup. Run:
 ```bash
-./setup.sh
+sudo apt-get update -qq && sudo apt-get install -y john whois
 ```
 
-### Can't Find Screenshot Folder?
-Create it:
-```bash
-mkdir -p screenshots
-```
+### "No such file or directory: data/shadow"
 
-### Need Help?
-- Post in Canvas Discussion Forum: "Week 2 Lab Help"
-- Come to office hours: [Professor's hours]
-- Email: [Professor's email]
+**Solution:** You didn't run Command 3 from setup. Run the entire Command 3 block again.
 
----
+### "No password hashes loaded"
 
-## ⚖️ Academic Integrity
+**Solution:** The shadow file might be empty or incorrectly formatted. Run Command 3 again.
 
-**✓ Allowed**:
-- Discussing concepts with classmates
-- Getting help with technical issues
-- Using lab instructions and course materials
-- Helping classmates troubleshoot Codespaces
+### Codespace Won't Start / Shows Errors
 
-**✗ Not Allowed**:
-- Sharing screenshots (must be YOUR name/work)
-- Copying answers to questions
-- Submitting someone else's work
-- Using someone else's hash values
+**Solution:** 
+1. Delete the broken codespace (Settings → Codespaces → Delete)
+2. Create a new codespace from your repository
+3. Run the 3 setup commands again
 
-**Remember**: Screenshots must show YOUR unique work (your name in hashes).
+### John Takes Forever / Doesn't Find Password
 
----
+**Solution:** Make sure you used the `--wordlist` parameter exactly as shown. Karl's password is in the default wordlist.
 
-## 🔒 Ethical Reminder
+### Can't Upload Screenshots
 
-The skills you learn in this lab are powerful. Use them:
-- ✓ To understand security concepts
-- ✓ To test your own systems
-- ✓ To build better defenses
-- ✓ In your future career as a security professional
-
-**Never** use them:
-- ✗ On systems you don't own
-- ✗ Without explicit written permission
-- ✗ To harm others or gain unauthorized access
-- ✗ To crack passwords you don't have authorization to test
-
-**"With great power comes great responsibility."**
-
-Unauthorized computer access is a federal crime under the Computer Fraud and Abuse Act (CFAA).
+**Solution:** 
+- Make sure you created the `screenshots/` folder (Command 2)
+- Try dragging and dropping image files into VS Code
+- Or use terminal: `curl -o screenshots/screenshot1.png <URL-to-image>`
 
 ---
 
 ## 📚 Additional Resources
 
-Want to learn more? Check out:
+### Learning More About Hashing
 
-- **Tolboom Textbook**: Chapter 2, Section 2.11 (pages 24-28)
-- **John the Ripper Documentation**: https://www.openwall.com/john/
-- **OWASP Password Storage Cheat Sheet**: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-- **How Hashing Works (Video)**: https://www.youtube.com/watch?v=b4b8ktEV4Bg
-- **Computerphile - Password Cracking**: https://www.youtube.com/watch?v=7U-RbOKanYs
+- [Wikipedia: Cryptographic Hash Function](https://en.wikipedia.org/wiki/Cryptographic_hash_function)
+- [How Password Hashing Works](https://auth0.com/blog/hashing-passwords-one-way-road-to-security/)
+
+### Password Security
+
+- [NIST Password Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html)
+- [Have I Been Pwned](https://haveibeenpwned.com/) - Check if your passwords have been compromised
+
+### John the Ripper
+
+- [Official Documentation](https://www.openwall.com/john/doc/)
+- [John the Ripper Tutorial](https://www.varonis.com/blog/john-the-ripper)
 
 ---
 
-**Good luck with your lab! 🔐**
+## ⚖️ Academic Integrity
 
-*Remember: Every password you crack teaches you how to create stronger ones.*
+This is an **individual assignment**. You may:
+- ✅ Discuss concepts with classmates
+- ✅ Ask the professor for help
+- ✅ Use online resources for research
+
+You may NOT:
+- ❌ Copy answers from another student
+- ❌ Share your screenshots or SUBMISSION.md file
+- ❌ Use AI tools to write your answers (you must understand and explain in your own words)
+
+**Violation of academic integrity will result in a zero for the assignment and referral to the Dean.**
+
+---
+
+## 📧 Questions?
+
+- **During Class:** Ask Professor Maine
+- **Office Hours:** [Posted on Canvas]
+- **Email:** [Your Email]
+- **Canvas Discussion:** Post in Week 2 Lab forum
+
+---
+
+**Good luck! Remember: This lab teaches you to DEFEND systems, not attack them. Always practice ethical computing.** 🔐
