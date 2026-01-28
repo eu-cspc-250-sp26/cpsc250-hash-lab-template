@@ -1,6 +1,7 @@
-Line 1: {
-Line 2:   "image": "mcr.microsoft.com/devcontainers/universal:2"
-Line 3: }
+{
+"image": "mcr.microsoft.com/devcontainers/universal:2"
+}
+
 **Step 7:** Scroll down, type commit message: `Use minimal config`
 
 **Step 8:** Click **"Commit changes"** (green button)
