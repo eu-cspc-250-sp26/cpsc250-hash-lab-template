@@ -1,79 +1,54 @@
 #!/bin/bash
 
-echo "🔧 Setting up CSPC 250 Hash Lab environment..."
+echo "=========================================="
+echo "Hash It Out Lab - Setup Script"
+echo "=========================================="
 echo ""
 
-# Update package list
-echo "📦 Updating package list..."
-sudo apt-get update -qq
+echo "Step 1: Installing John the Ripper and utilities..."
+sudo apt-get update -qq && sudo apt-get install -y john whois
+echo "✓ Tools installed"
+echo ""
 
-# Install John the Ripper
-echo "🔨 Installing John the Ripper..."
-sudo apt-get install -y john > /dev/null 2>&1
+echo "Step 2: Creating directories..."
+mkdir -p screenshots data
+echo "✓ Directories created"
+echo ""
 
-# Install whois (provides mkpasswd)
-echo "🔧 Installing password tools..."
-sudo apt-get install -y whois > /dev/null 2>&1
-
-# Create lab directories in the repo (not home directory)
-echo "📁 Creating lab directories..."
-mkdir -p /workspaces/$(basename $GITHUB_REPOSITORY)/screenshots
-mkdir -p /workspaces/$(basename $GITHUB_REPOSITORY)/data
-
-# Create test shadow file in repo's data directory
-echo "📝 Creating test data..."
-cat > /workspaces/$(basename $GITHUB_REPOSITORY)/data/shadow << 'EOF'
+echo "Step 3: Creating test password file..."
+cat > data/shadow << 'EOF'
 root:*:19219:0:99999:7:::
 daemon:*:19219:0:99999:7:::
 karl:$y$j9T$oR2ZofMTuH3dpEGbw6c/y.$TwfvHgCl4sIp0b28YTepJ3YVvl/3UyWKeLCmDV1tAd9:19255:0:99999:7:::
 EOF
-
-# Make the verification script executable
-chmod +x /workspaces/$(basename $GITHUB_REPOSITORY)/setup.sh
-
-echo ""
-echo "✅ Setup complete! Verifying installations..."
+echo "✓ Test data created"
 echo ""
 
-# Verify installations
+echo "=========================================="
+echo "Verifying setup..."
+echo "=========================================="
+
 if command -v john &> /dev/null; then
-    echo "✓ John the Ripper: $(john --version 2>&1 | head -n1)"
+    echo "✓ John the Ripper is installed"
 else
-    echo "✗ John the Ripper: NOT FOUND"
+    echo "✗ John the Ripper is NOT installed"
 fi
 
-if command -v md5sum &> /dev/null; then
-    echo "✓ md5sum: Available"
+if [ -d "screenshots" ]; then
+    echo "✓ screenshots/ directory exists"
 else
-    echo "✗ md5sum: NOT FOUND"
+    echo "✗ screenshots/ directory NOT found"
 fi
 
-if command -v mkpasswd &> /dev/null; then
-    echo "✓ mkpasswd: Available"
+if [ -f "data/shadow" ]; then
+    echo "✓ data/shadow file exists"
 else
-    echo "✗ mkpasswd: NOT FOUND"
-fi
-
-# Check if data directory was created
-if [ -d "/workspaces/$(basename $GITHUB_REPOSITORY)/data" ]; then
-    echo "✓ data/ directory: Created"
-else
-    echo "✗ data/ directory: NOT FOUND"
-fi
-
-# Check if shadow file exists
-if [ -f "/workspaces/$(basename $GITHUB_REPOSITORY)/data/shadow" ]; then
-    echo "✓ data/shadow file: Created"
-else
-    echo "✗ data/shadow file: NOT FOUND"
+    echo "✗ data/shadow file NOT found"
 fi
 
 echo ""
-echo "🎉 Your lab environment is ready!"
+echo "=========================================="
+echo "Setup complete! You're ready to start the lab."
+echo "=========================================="
 echo ""
-echo "📚 Next steps:"
-echo "  1. Read the README.md file"
-echo "  2. Follow the lab activities in order"
-echo "  3. Take screenshots as you work"
-echo "  4. Answer questions in SUBMISSION.md"
-echo ""
+echo "Open README.md for lab instructions."
