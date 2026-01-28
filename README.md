@@ -42,7 +42,7 @@ Your Codespace needs three commands to set up the lab environment. Copy and past
 #### Command 1: Install Password Cracking Tools (30-60 seconds)
 
 ```bash
-sudo apt-get update -qq && sudo apt-get install -y john whois
+sudo apt-get install john
 ```
 
 **What this does:** Installs John the Ripper (password cracker) and whois utility.
